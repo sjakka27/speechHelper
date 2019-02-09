@@ -121,8 +121,6 @@ def text_analysis(text):
     subscription_key = "9ca01fb5107449439a19c6b1bfd56e09"
     text_analytics_base_url = "https://westcentralus.api.cognitive.microsoft.com/text/analytics/v2.0/"
     sentiment_api_url = text_analytics_base_url + "sentiment"
-    #make documents include an entry for each element of input (text is a list)
-    #for i in range(0,len(text)):
     dlist = list()
     for i in range(0,len(text)):
         dicty = dict()
@@ -135,7 +133,11 @@ def text_analysis(text):
     headers   = {"Ocp-Apim-Subscription-Key": subscription_key}
     response  = requests.post(sentiment_api_url, headers=headers, json=documents)
     sentiments = response.json()
-    return sentiments
+    senti_list = list()
+    for i in range(0,len(sentiments['documents'])):
+        tup = (documents['documents'][i]['text'], sentiments['documents'][i]['score'])
+        senti_list.append(tup)
+    return senti_list
 
 
 def main():
@@ -144,5 +146,6 @@ def main():
     text = list()
     for i in range(0,len(texty)):
         list.append(texty[i][0])
+    #text emotions is list of tuples (text,sentiment score)
     text_emotions = text_analysis(text)
 
